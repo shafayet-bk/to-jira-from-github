@@ -4,6 +4,8 @@ const writeLog = (...argList) => {
 
 writeLog("Processor script loaded.");
 
+const MAIN_REGEX = /^\s?[a-z]{1,2}-[0-9]{1,5}:/im;
+
 const POLLING_DELAY = 1000;
 const SECONDARY_DELAY = 1000;
 const MAX_ATTEMPTS = 6;
@@ -16,11 +18,15 @@ const ANCHOR_CLASSNAME = "jira-github-bridge-ext-link";
 
 const extractStoryId = (el) => {
   let text = el.innerHTML;
-  let index = text.indexOf("ID-");
-  if (index == -1) return false;
-  let index2 = text.indexOf(":", index);
-  if (index2 == -1) return false;
-  return text.slice(index, index2);
+
+  let matches = String(text).match(MAIN_REGEX);
+  if (!matches) return false;
+
+  let key = matches[0];
+  key = key.trim();
+  key = key.slice(0, key.length - 1);
+  
+  return key;
 };
 
 const makeJiraLinkUrl = (storyId) => {
