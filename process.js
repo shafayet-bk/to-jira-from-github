@@ -1,10 +1,13 @@
 const writeLog = (...argList) => {
-  console.log(...argList);
+  console.log("TJFG:", ...argList);
 };
 
 writeLog("Processor script loaded.");
 
-const MAIN_REGEX = /^\s?[a-z]{1,2}-[0-9]{1,5}:/im;
+// ------ Shared - Start
+const DEFAULT_REGEX_STRING = "^s?[a-z]{1,2}-[0-9]{1,5}:";
+const LOCALSTORAGE_KEY = "to_jira_from_gh__regex3";
+// ------ Shared - End
 
 const POLLING_DELAY = 1000;
 const SECONDARY_DELAY = 1000;
@@ -16,16 +19,27 @@ const QUERY_STRING_3 = "div.commit-title.markdown-title";
 
 const ANCHOR_CLASSNAME = "jira-github-bridge-ext-link";
 
+let activeRegex = null; // Global variable
+
+const loadRegexFromLocalStorage = (cbfn) => {
+  chrome.storage.sync.get([LOCALSTORAGE_KEY], (obj) => {
+    let value = obj[LOCALSTORAGE_KEY];
+    let regexString = value ? value : DEFAULT_REGEX_STRING;
+    activeRegex = new RegExp(regexString, "i");
+    cbfn();
+  });
+};
+
 const extractStoryId = (el) => {
   let text = el.innerHTML;
 
-  let matches = String(text).match(MAIN_REGEX);
+  let matches = String(text).match(activeRegex);
   if (!matches) return false;
 
   let key = matches[0];
   key = key.trim();
   key = key.slice(0, key.length - 1);
-  
+
   return key;
 };
 
@@ -85,6 +99,7 @@ const createJiraLinks = (cbfn) => {
   for (let el of elList) {
     let storyId = extractStoryId(el);
     if (!storyId) continue;
+    writeLog("possible storyId:", storyId);
 
     let elExisting = el.parentNode.querySelector(`.${ANCHOR_CLASSNAME}`);
     if (!elExisting) {
@@ -133,4 +148,7 @@ const pollingAgentFn = () => {
   }
   setTimeout(pollingAgentFn, POLLING_DELAY);
 };
-setTimeout(pollingAgentFn, POLLING_DELAY);
+
+loadRegexFromLocalStorage(() => {
+  setTimeout(pollingAgentFn, POLLING_DELAY);
+});

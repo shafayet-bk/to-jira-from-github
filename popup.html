@@ -6,19 +6,37 @@
   <body>
     <h1>To Jira from Github</h1>
     <div>
-      A simple utiltiy by
+      A simple browser extension that lets you jump to relevant JIRA task/story
+      right from a github commit/PR.
+    </div>
+
+    <div class="configuration" style="margin-top: 20px">
+      Regex: <input type="text" id="regex-input" />
+      <input type="button" value="Save" id="save-button" />
+
+      <div style="margin-top: 6px">Notes:</div>
+      <ul>
+        <li>Default regex is <span id="default-regex"></span></li>
+        <li>Reload the page for your changes to take effect.</li>
+      </ul>
+    </div>
+
+    <div style="margin-top: 20px">
+      Created for internal use at bKash labs by
       <a href="https://github.com/shafayet-bk" target="_blank">
         Sayem Shafayet.
       </a>
-      Created for internal use at bKash labs.
     </div>
 
-    <a class="get-the-code"
-      href="https://github.com/shafayet-bk/to-jira-from-github"
-      target="_blank"
-    >
-      Get the Code
-    </a>
+    <div style="margin-top: 6px">
+      <a
+        class="get-the-code"
+        href="https://github.com/shafayet-bk/to-jira-from-github"
+        target="_blank"
+      >
+        Get the Code
+      </a>
+    </div>
 
     <script src="popup.js"></script>
   </body>
