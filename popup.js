@@ -1,7 +1,7 @@
 console.log("Popup loaded");
 
 // ------ Shared - Start
-const DEFAULT_REGEX_STRING = "^s?[a-z]{1,2}-[0-9]{1,5}:";
+const DEFAULT_REGEX_STRING = "^s?[a-z]{1,2}-[0-9]{1,5}[ ]*:";
 const LOCALSTORAGE_KEY = "to_jira_from_gh__regex3";
 // ------ Shared - End
 
